@@ -1,0 +1,11 @@
+{
+    
+    "User":[
+        {"Name":"Mark","Student_Id":"A001","Student_Password":"123"}
+    ]
+    ,"Manager":[
+        {"Name":"Jack","Manager_Id":"M001","Manager_Password":"123"}
+    ]
+    
+    
+}

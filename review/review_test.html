@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/propose.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="/review/review.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+    <input type="checkbox" id="meau-switch">
+    <nav class="navbar sticky-top navbar-dark bg-dark">
+        <!-- Navbar content -->
+        <div>
+            <a href="/home/main.html"><img src="https://picsum.photos/50/50/?random=10"></a>
+            <a href="/home/main.html">
+                <h1>校園政策平台網</h1>
+            </a>
+        </div>
+
+        <label for="meau-switch" class="hb">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <div class="main-nav">
+            <a class="btn btn-primary" href="/home/main.html" role="button">首頁</a>
+            <a class="btn btn-primary" href="/proposal/proposal.html" role="button">提案</a>
+            <a class="btn btn-primary" href="/usesupervision/usesupervision.html" role="button">監督</a>
+            <a class="btn btn-primary" href="/makevarious/makevarious.html" role="button">各處室</a>
+        </div>
+    </nav>
+    <div class="main">
+        <div class="main-wh">
+            <div class="title" id="title">
+                <!-- <h1></h1> -->
+                <!-- Json讀入標題資料 -->
+            </div>
+            <div class="vote_total">
+                <div class="vote_left col-4">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="vote_middle col-4" id="vote_middle">
+                    <div class="vote_top">
+                        <h2>提議者</h2>
+                        <p id="vote_ID"></p>
+                    </div>
+                    <div class="vote_bottom">
+                        <h2>類型</h2>
+                        <p id="Vote_category"></p>
+                    </div>
+                    <!-- Json讀入提議者資料 -->
+                </div>
+                <div class="vote_right col-4">
+                    <div class="assent" id="assent">
+                        <h2>贊成</h2>
+                    </div>
+                    <div class="contra" id="contra">
+                        <h2>反對</h2>
+                    </div>
+                </div>
+
+            </div>
+            <div class="schedule">
+                <p>時間表</p>
+                <!-- Json圖表 -->
+            </div>
+            <div class="propose_content">
+                <div class="content_title">
+                    <h2>提議內容與建議事項</h2>
+                </div>
+                <div class="content_1" id="content_1">
+                    <!-- <p>內容1</p> -->
+                </div>
+            </div>
+            <div class="propose_benefit">
+                <div class="benefit_title">
+                    <h2>利益與影響</h2>
+                </div>
+                <div class="content_2" id="content_2">
+                    <!-- <p>內容2</p> -->
+                </div>
+                <div class="vote_btn">
+                    <a>
+                        <button type="button" id="vote_assent" class="btn btn-outline-danger">贊成</button>
+                    </a>
+                    <a>
+                        <button type="button" id="vote_contra" class="btn btn-outline-danger">反對</button>
+                    </a>
+                </div>
+
+            </div>
+            <div class="message_area">
+                <h2>留言區</h2>
+                <div class="container" id="container"></div>
+            </div>
+
+            <div class="response_area">
+                <h2>回覆區</h2>
+                <div class="alert alert-primary" id=res_content role="alert">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="end">
+        <div class="tal">
+            <div>
+                <h4>聯絡資訊</h4>
+                <h5>
+                    30012 新竹市香山區五福路二段707號<br>
+                    707, Sec.2, WuFu Rd., Hsinchu, Taiwan 30012, R.O.C. 電話：03-5374281~5 傳真：03-5373771
+                </h5>
+            </div>
+            <div>
+                <h4>緊急聯絡</h4>
+                <h5>
+                    校園安全專線：0972590728 (全日)<br>
+                    學生宿舍專線：03-5376000,<br>03-5375015
+                </h5>
+            </div>
+        </div>
+        <div class="a">上半部超連結</div>
+        <div class="a"><!--往網站介紹連結--></div>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+    let url = "/review/review.json"
+    let urls = "/review/massage.json"
+    let urlss = "/review/response.json"
+    let num = 1;
+    contra_amount = 0;
+    sul = 0;
+    let xhr = new XMLHttpRequest();
+    let xhrs = new XMLHttpRequest();
+    let xhrss = new XMLHttpRequest();
+
+
+    //圓餅圖表
+    function chart_Pie() {
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    '贊成',
+                    '反對',
+                ],
+                datasets: [{
+                    label: '數量',
+                    data: [contra_amount, sul],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                    ],
+                    hoverOffset: 3
+                }]
+            }
+        });
+    }
+    window.onload = function () {
+        Proposal(url);
+        Vote(urls);
+        response_data(urlss);
+    };
+
+    function Proposal(url) {
+        xhr.onload = function () {
+
+            Data = this.response;
+            var title = document.getElementById("title");
+            title.innerHTML = "<h1>" + Data.title + "</h1>";
+
+            var Vote_ID = document.getElementById("vote_ID");
+            Vote_ID.innerText = Data.userID;
+
+            var Vote_category = document.getElementById("Vote_category");
+            Vote_category.innerText = Data.Category;
+
+
+            var content_1 = document.getElementById("content_1")
+            var content = document.createElement("p");
+            content.innerText = Data.context;
+            content_1.appendChild(content);
+
+            var content_2 = document.getElementById("content_2");
+            var benefit = document.createElement("p");
+            benefit.innerText = Data.benefit;
+            content_2.appendChild(benefit);
+            // console.log(Data.title,Data.userID,Data.agree);
+        }
+        xhr.open('GET', url);
+        xhr.responseType = "json";
+        xhr.send();
+    }
+
+    function Vote(url) {
+        xhrs.onload = function () {
+            massage = this.response;
+            //console.log(massage);
+            contra_assent();
+            card();
+            page();
+            //圖表
+            chart_Pie();
+        }
+        xhrs.open('GET', url);
+        xhrs.responseType = "json";
+        xhrs.send();
+    }
+
+    //讀取回傳data
+    function response_data(url) {
+        xhrss.onload = function () {
+            Responsed = this.response;
+            response_content()
+            //console.log(Responsed.proposalId,Responsed.GerentID,Responsed.RContent);
+        }
+        xhrss.open('GET', url);
+        xhrss.responseType = "json";
+        xhrss.send();
+    }
+
+
+
+    //贊成反對數量寫入
+    function contra_assent() {
+
+        let assent = document.getElementById("assent");
+        let contra = document.getElementById("contra");
+
+        let assent_h3 = document.createElement("h3");
+        let contra_h3 = document.createElement("h3");
+        //console.log(contra_h3.innerText);
+
+        if ($('#assent h3').length == 0) {
+            massage.forEach((dates, index) => {
+                if (dates.Crucial == "True") {
+                    contra_amount += 1;
+                }
+                else if (dates.Crucial == "False") {
+                    sul += 1;
+                }
+            });
+
+
+            assent_h3.innerText = contra_amount;
+            assent.append(assent_h3);
+            contra_h3.innerText = sul;
+            contra.append(contra_h3);
+        }
+    };
+    //製作卡片
+    function card() {
+        massage.forEach((item, index) => {
+            if (index < 8 * (num - 1) || index >= 8 * num) {
+                return;
+            }
+            // console.log(index,item.UserId,item.content,item.Crucial,item.date);
+            let card = document.createElement("div");
+            let text = document.createElement("div");
+            let icon = document.createElement("div")
+            let text_ul = document.createElement("ul");
+            let text_p = document.createElement("p");
+            let good = document.createElement("i");
+            let bad = document.createElement("i");
+            cardsetstyle();
+            text_ul.innerHTML = `<li>${item.UserId}</li><li>${item.date}</li>`;
+            text_p.innerText = item.content;
+            card.append(text);
+            card.append(icon);
+            text.append(text_ul);
+            text.append(text_p);
+            container.append(card);
+            if (item.Crucial == 'True') {
+                icon.append(good);
+            }
+            else {
+                icon.append(bad);
+            }
+
+            function cardsetstyle() {
+                card.className = "card"
+                text.className = "text"
+                icon.className = "icon"
+                good.className = "fa-sharp fa-regular fa-thumbs-up"
+                bad.className = "fa-regular fa-thumbs-down"
+            }
+
+        });
+    }
+    //頁數
+    function page() {
+        let div = document.createElement("div");
+        div.className = "page";
+        //ceil無條件進位
+        for (var i = 0; i < Math.ceil(massage.length / 8); i++) {
+            let a = document.createElement("a");
+            a.className = "btn btn-link";
+            a.href = "#";
+            a.innerText = i + 1;
+            a.id = `page${i + 1}`;
+            div.append(a);
+        }
+        container.append(div);
+        click();
+    }
+    //點擊下一頁
+    function click() {
+        for (var i = 0; i < Math.ceil(massage.length / 8); i++) {
+            let page = document.getElementById(`page${i + 1}`);
+            //console.log(page);
+            $(`#page${i + 1}`).click(function () {
+                container.innerHTML = "";
+                //console.log(container.innerHTML);
+                num = page.innerText;
+                //console.log(num);
+                Vote(urls);
+            })
+        }
+
+
+
+    }
+
+    //回傳文字
+    function response_content() {
+        let res_content = document.getElementById("res_content");
+        var res_h3 = document.createElement("h3");
+        res_h3.innerText = Responsed.RContent;
+        res_content.append(res_h3);
+    }
+
+    //贊成反對click
+    document.getElementById("vote_assent").onclick =function(){
+        location.href = `/review/vote/assent.html?${xhr.response.title}&${this.innerText}`;
+    }
+    document.getElementById("vote_contra").onclick =function(){
+        location.href = `/review/vote/contra.html?${xhr.response.title}&${this.innerText}`;
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.min.js"
+    integrity="sha512-mlz/Fs1VtBou2TrUkGzX4VoGvybkD9nkeXWJm3rle0DPHssYYx4j+8kIS15T78ttGfmOjH0lLaBXGcShaVkdkg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+
+
+</html>

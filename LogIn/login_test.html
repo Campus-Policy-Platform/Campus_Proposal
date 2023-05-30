@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+    <div class="login-box">
+        <h2>登入頁面</h2>
+        <form>
+            <div class="user-box">
+                <input type="text" name="" id="Id" required="">
+                <label>學號</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="" id="Password" required="">
+                <label>密碼</label>
+                <i id="checkEye" class="fas fa-eye"></i>
+            </div>
+            <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <input type="button" id="user_submit" value="使用者">
+            </a>
+            <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <input type="button" id="manager_submit" value="管理者">
+            </a>
+        </form>
+    </div>
+</body>
+<script>
+    let url = "/LogIn/login_test.json";
+    let Data = [];
+    let managername = [];
+    let managerid = [];
+    let managerpas = [];
+
+    let username = [];
+    let studentid = [];
+    let studentpas = [];
+    let xhr = new XMLHttpRequest();
+
+    var User_btn = document.querySelector("#user_submit");
+    window.onload = function () {
+        requestJSON1(url)
+
+    };
+
+    User_btn.addEventListener("click", function () {
+        let Stu_Id = document.getElementById("Id").value;
+        let Stu_Pas = document.getElementById("Password").value;
+        //console.log(Stu_Id)
+        if(Stu_Id == studentid && Stu_Pas == studentpas)
+        {
+            alert("登入成功");
+            location.href = "/home/main.html";
+        }
+        else
+        {
+            alert("登入失敗");
+        }
+    });
+    var manager_btn = document.querySelector("#manager_submit");
+    manager_btn.addEventListener("click", function () {
+        let Man_Id = document.getElementById("Id").value;
+        let Man_Pas = document.getElementById("Password").value;
+        //console.log(Stu_Id)
+        if(Man_Id == managerid && Man_Pas == managerpas)
+        {
+            alert("管理者登入成功");
+        }
+        else
+        {
+            alert("登入失敗");
+        }
+    });
+    //讀取資料
+    function requestJSON1(url) {
+        xhr.onload = function () {
+            Data = this.response;
+            console.log(Data);
+            //管理者物件
+            Data.Manager.forEach((Manager, index) => {
+                managername = Manager.Name;
+                managerid = Manager.Manager_Id;
+                managerpas = Manager.Manager_Password;
+                //console.log(Manager.Name,Manager.Manager_Id,Manager.Manager_Password)
+            });
+            //使用者物件
+            Data.User.forEach((User, index) => {
+                name = User.Name;
+                studentid = User.Student_Id;
+                studentpas = User.Student_Password;
+                //console.log(User.Name,User.Student_Id,User.Student_Password)
+            });
+        }
+        xhr.open('GET', url);
+        xhr.responseType = "json";
+        xhr.send();
+    }
+
+
+    //顯示隱藏密碼
+    checkEye.addEventListener("click", function (e) {
+        var checkEye = document.getElementById("checkEye");
+        var user_password = document.getElementById("user_password");
+        if (e.target.classList.contains('fa-eye')) {
+            e.target.classList.remove('fa-eye');
+            e.target.classList.add('fa-eye-slash');
+            user_password.setAttribute('type', 'text')
+        }
+        else {
+            user_password.setAttribute('type', 'password');
+            e.target.classList.remove('fa-eye-slash');
+            e.target.classList.add('fa-eye')
+        }
+    });
+
+</script>
+
+</html>
